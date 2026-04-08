@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  
+  --color-coffee-50: #fdfaf6;
+  --color-coffee-100: #f7f0e6;
+  --color-coffee-200: #eadbc9;
+  --color-coffee-300: #d6bc9f;
+  --color-coffee-400: #bf9776;
+  --color-coffee-500: #a87856;
+  --color-coffee-600: #946246;
+  --color-coffee-700: #7b503d;
+  --color-coffee-800: #654336;
+  --color-coffee-900: #54392f;
+}
+
+:root {
+  --primary: #654336;
+  --bg-color: #fdfaf6;
+  --text-color: #54392f;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --border-color: #eadbc9;
+  --header-bg: rgba(247, 240, 230, 0.8);
+}
+
+.dark {
+  --bg-color: #1a1a1a;
+  --text-color: #fdfaf6;
+  --card-bg: rgba(40, 40, 40, 0.9);
+  --border-color: #333333;
+  --header-bg: rgba(26, 26, 26, 0.8);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  @apply antialiased transition-colors duration-300;
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.bg-app {
+  background-color: var(--bg-color);
+}
+
+.text-app {
+  color: var(--text-color);
+}
+
+.bg-card-app {
+  background-color: var(--card-bg);
+}
+
+.border-app {
+  border-color: var(--border-color);
+}
+
+.bg-header-app {
+  background-color: var(--header-bg);
+}
