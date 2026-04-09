@@ -75,3 +75,32 @@ body {
 .bg-header-app {
   background-color: var(--header-bg);
 }
+
+/* Premium Ultra Animations */
+@keyframes steam {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
+}
+
+.animate-steam {
+  animation: steam 3s infinite ease-out;
+}
+
+@keyframes bubble {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 0.6; }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+
+.animate-bubble {
+  animation: bubble 4s infinite ease-in;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

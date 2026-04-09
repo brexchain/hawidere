@@ -1,5 +1,7 @@
 {
-  "name": "Hawidere - Da digitale Ober",
-  "description": "A gmiatliche Speiskoatn im Wiener Schmäh. Essn und Durscht, serviert vom digitalen Ober.",
-  "requestFramePermissions": []
+  "name": "Hawidere - Der Digitale Ober",
+  "description": "Ein erstklassiges digitales Bestellerlebnis mit Wiener Charme. Entdecken Sie unsere kuratierte Auswahl an Speisen und Getränken, serviert mit modernster UX und traditionellem Flair.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
 }

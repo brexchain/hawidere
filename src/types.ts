@@ -13,6 +13,7 @@ export interface MenuItem {
   dietary?: ('vegan' | 'veggie' | 'glutenfree' | 'spicy')[];
   allergens?: string[];
   chefNote?: string;
+  isFeatured?: boolean;
   pairings?: number[]; // IDs of suggested items
   translations?: {
     en: {

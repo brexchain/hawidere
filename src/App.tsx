@@ -27,10 +27,12 @@ import {
   Wheat,
   Flame,
   BellRing,
-  Fingerprint
+  Fingerprint,
+  Star
 } from 'lucide-react';
 import { MENU_ITEMS as INITIAL_MENU } from './data/menu';
 import { MenuItem, Category, AppConfig } from './types';
+import { supabase } from './lib/supabase';
 
 const DEFAULT_CONFIG: AppConfig = {
   name: "Hawidere!",
@@ -100,6 +102,94 @@ export default function App() {
     localStorage.setItem('hawidere_menu', JSON.stringify(menuItems));
   }, [menuItems]);
 
+  // Supabase Realtime Subscriptions
+  useEffect(() => {
+    // Fetch initial orders
+    const fetchOrders = async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      
+      if (data) {
+        setLiveOrders(data.map(o => ({
+          id: o.id.slice(0, 5).toUpperCase(),
+          items: o.items,
+          total: o.total,
+          status: o.status,
+          table: o.table_number || '?',
+          time: new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        })));
+      }
+    };
+
+    // Fetch initial feedback
+    const fetchFeedback = async () => {
+      const { data, error } = await supabase
+        .from('feedback')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      
+      if (data) {
+        setLiveFeedback(data.map(f => ({
+          id: f.id.slice(0, 5).toUpperCase(),
+          rating: f.rating,
+          comment: f.comment,
+          time: new Date(f.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        })));
+      }
+    };
+
+    fetchOrders();
+    fetchFeedback();
+
+    // Subscribe to changes
+    const ordersSubscription = supabase
+      .channel('public:orders')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+        if (payload.eventType === 'INSERT') {
+          const o = payload.new;
+          const newOrder = {
+            id: o.id.slice(0, 5).toUpperCase(),
+            items: o.items,
+            total: o.total,
+            status: o.status,
+            table: o.table_number || '?',
+            time: new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          setLiveOrders(prev => [newOrder, ...prev]);
+        } else if (payload.eventType === 'UPDATE') {
+          setLiveOrders(prev => prev.map(order => 
+            order.id === payload.new.id.slice(0, 5).toUpperCase() 
+              ? { ...order, status: payload.new.status } 
+              : order
+          ));
+        }
+      })
+      .subscribe();
+
+    const feedbackSubscription = supabase
+      .channel('public:feedback')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'feedback' }, (payload) => {
+        const f = payload.new;
+        const newFeedback = {
+          id: f.id.slice(0, 5).toUpperCase(),
+          rating: f.rating,
+          comment: f.comment,
+          time: new Date(f.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setLiveFeedback(prev => [newFeedback, ...prev]);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(ordersSubscription);
+      supabase.removeChannel(feedbackSubscription);
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('hawidere_nightmode', String(isNightMode));
     if (isNightMode) {
@@ -154,7 +244,8 @@ export default function App() {
         status_preparing: "In da Kuchl...",
         status_ready: "Glei bei dir!",
         live_orders: "Live Bestellungen",
-        no_orders: "Noch ka Stress."
+        no_orders: "Noch ka Stress.",
+        featured_title: "Chef's Spotlight"
       },
       en: {
         essn: "Food",
@@ -194,7 +285,8 @@ export default function App() {
         status_preparing: "In the kitchen...",
         status_ready: "Almost there!",
         live_orders: "Live Orders",
-        no_orders: "No stress yet."
+        no_orders: "No stress yet.",
+        featured_title: "Chef's Spotlight"
       }
     };
     return dict[lang as keyof typeof dict];
@@ -210,6 +302,10 @@ export default function App() {
       return matchesCat && matchesSearch && matchesDietary;
     });
   }, [activeCat, menuItems, searchQuery, activeDietary]);
+
+  const featuredItems = useMemo(() => {
+    return menuItems.filter(i => i.isFeatured).slice(0, 3);
+  }, [menuItems]);
 
   const cartItems = useMemo(() => {
     return Object.entries(cart).map(([id, qty]) => {
@@ -335,16 +431,22 @@ export default function App() {
 
     // Process the order (stamps, clear cart) but don't close the overlay
     const itemsCount = Object.values(cart).reduce((a, b) => (a as number) + (b as number), 0) as number;
-    const orderId = Math.random().toString(36).substr(2, 5).toUpperCase();
-    const newOrder = {
-      id: orderId,
-      items: cartItems,
-      total: totalPrice,
-      status: 'pending',
-      table: tableNumber || '?',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-    setLiveOrders(prev => [newOrder, ...prev]);
+    
+    // Supabase Insert
+    const { data: orderData, error: orderError } = await supabase
+      .from('orders')
+      .insert([{
+        items: cartItems,
+        total: totalPrice,
+        status: 'pending',
+        table_number: tableNumber || '?'
+      }])
+      .select();
+
+    if (orderError) {
+      console.error('Error saving order to Supabase:', orderError);
+    }
+
     setLastOrder({ items: cartItems, total: totalPrice });
     setFeedbackSubmitted(false);
 
@@ -471,28 +573,24 @@ export default function App() {
           />
         </div>
         
-        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-          <button
-            onClick={() => setActiveDietary(null)}
-            className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${
-              activeDietary === null 
-                ? 'bg-primary text-white border-primary shadow-md' 
-                : 'bg-card-app text-app border-app opacity-60'
-            }`}
-          >
-            {t.all}
-          </button>
-          {['vegan', 'veggie', 'glutenfree', 'spicy'].map((tag) => (
+        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+          {[
+            { id: null, label: t.all, icon: <LayoutGrid size={14} /> },
+            { id: 'vegan', label: t.vegan, icon: <Leaf size={14} /> },
+            { id: 'veggie', label: t.veggie, icon: <Wheat size={14} /> },
+            { id: 'spicy', label: t.spicy, icon: <Flame size={14} /> },
+          ].map((filter) => (
             <button
-              key={tag}
-              onClick={() => setActiveDietary(tag)}
-              className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${
-                activeDietary === tag 
-                  ? 'bg-primary text-white border-primary shadow-md' 
-                  : 'bg-card-app text-app border-app opacity-60'
+              key={filter.id || 'all'}
+              onClick={() => setActiveDietary(filter.id)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black whitespace-nowrap transition-all border ${
+                activeDietary === filter.id 
+                  ? 'bg-primary text-white border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] scale-105' 
+                  : 'bg-card-app text-app border-app opacity-50 hover:opacity-100'
               }`}
             >
-              {t[tag as keyof typeof t]}
+              {filter.icon}
+              {filter.label}
             </button>
           ))}
         </div>
@@ -526,6 +624,58 @@ export default function App() {
 
       {/* Menu List */}
       <main className="flex-1 p-4 space-y-4 pb-32">
+        {/* Bento Featured Section */}
+        {activeCat === 'Essn' && !activeDietary && !searchQuery && featuredItems.length > 0 && (
+          <section className="mb-8">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-4 flex items-center gap-2">
+              <Star size={12} className="text-primary" /> {t.featured_title || "Chef's Spotlight"}
+            </h3>
+            <div className="grid grid-cols-2 grid-rows-2 gap-3 h-[380px]">
+              {featuredItems[0] && (
+                <motion.div 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedItem(featuredItems[0])}
+                  className="col-span-1 row-span-2 relative rounded-[2.5rem] overflow-hidden group cursor-pointer shadow-xl border border-white/10"
+                >
+                  <img src={featuredItems[0].image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <span className="bg-primary text-white text-[9px] font-black px-2 py-1 rounded-md uppercase mb-2 inline-block tracking-widest">Empfehlung</span>
+                    <h4 className="serif text-2xl font-bold text-white leading-tight mb-1">{featuredItems[0].name}</h4>
+                    <p className="text-primary font-black text-lg">{featuredItems[0].price.toFixed(2)}€</p>
+                  </div>
+                </motion.div>
+              )}
+              {featuredItems[1] && (
+                <motion.div 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedItem(featuredItems[1])}
+                  className="col-span-1 row-span-1 relative rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg border border-white/10"
+                >
+                  <img src={featuredItems[1].image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-4 left-5">
+                    <h4 className="serif text-lg font-bold text-white leading-tight">{featuredItems[1].name}</h4>
+                  </div>
+                </motion.div>
+              )}
+              {featuredItems[2] && (
+                <motion.div 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedItem(featuredItems[2])}
+                  className="col-span-1 row-span-1 relative rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg border border-white/10"
+                >
+                  <img src={featuredItems[2].image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-4 left-5">
+                    <h4 className="serif text-lg font-bold text-white leading-tight">{featuredItems[2].name}</h4>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </section>
+        )}
+
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCat + (config.tileLayout || 'big')}
@@ -544,7 +694,9 @@ export default function App() {
                 onClick={() => setSelectedItem(item)}
                 className={`bg-card-app backdrop-blur-sm rounded-3xl border border-app shadow-sm hover:shadow-md transition-shadow group overflow-hidden flex flex-col cursor-pointer active:scale-[0.98] ${
                   config.tileLayout === 'small' ? 'p-3' : 'p-5'
-                } ${item.isSoldOut ? 'grayscale opacity-60' : ''}`}
+                } ${item.isSoldOut ? 'grayscale opacity-60' : ''} ${
+                  item.isFeatured ? 'ring-1 ring-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]' : ''
+                }`}
               >
                 <div className={config.tileLayout === 'small' ? "flex flex-col gap-2" : "flex gap-4"}>
                   {item.image && (
@@ -555,7 +707,36 @@ export default function App() {
                         className={`${
                           config.tileLayout === 'small' ? 'w-full h-32' : 'w-24 h-24'
                         } rounded-2xl object-cover border border-app`}
+                        referrerPolicy="no-referrer"
                       />
+                      
+                      {/* Premium Ultra: Ambient Effects */}
+                      {!item.isSoldOut && item.cat === 'Essn' && (
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+                          {[...Array(3)].map((_, i) => (
+                            <div 
+                              key={i}
+                              className="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-8 bg-white/10 blur-md rounded-full animate-steam"
+                              style={{ animationDelay: `${i * 0.8}s`, left: `${40 + i * 10}%` }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {!item.isSoldOut && item.cat === 'Durscht' && (
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+                          {[...Array(5)].map((_, i) => (
+                            <div 
+                              key={i}
+                              className="absolute bottom-1 w-1 h-1 bg-white/40 rounded-full animate-bubble"
+                              style={{ 
+                                animationDelay: `${i * 0.5}s`, 
+                                left: `${20 + Math.random() * 60}%`,
+                                animationDuration: `${3 + Math.random() * 2}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
                       {item.isSoldOut && (
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-2xl">
                           <span className="text-white font-black text-[10px] uppercase tracking-tighter rotate-[-12deg] border-2 border-white px-2 py-1">
@@ -588,6 +769,12 @@ export default function App() {
                         }`}>
                           {config.language === 'en' && item.translations?.en ? item.translations.en.name : item.name}
                         </h3>
+                        {item.isFeatured && (
+                          <div className="flex items-center gap-1 mt-1">
+                            <Star size={10} className="text-primary fill-primary" />
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Chef's Pick</span>
+                          </div>
+                        )}
                       </div>
                       <span className={`${config.tileLayout === 'small' ? 'text-sm' : 'text-lg'} font-bold text-primary shrink-0 ml-2`}>
                         {item.price.toFixed(2)}€
@@ -843,6 +1030,13 @@ export default function App() {
                   <X size={24} />
                 </button>
                 <div className="absolute bottom-6 left-6 right-6">
+                  {selectedItem.isFeatured && (
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="bg-primary text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1">
+                        <Star size={12} className="fill-white" /> Chef's Recommendation
+                      </div>
+                    </div>
+                  )}
                   <h2 className="text-3xl font-black text-white drop-shadow-lg">
                     {config.language === 'at' ? selectedItem.name : selectedItem.translations?.en?.name}
                   </h2>
@@ -851,7 +1045,13 @@ export default function App() {
 
               <div className="p-8 space-y-6 overflow-y-auto no-scrollbar">
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-black text-primary">{selectedItem.price.toFixed(2)}€</span>
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-black text-primary">{selectedItem.price.toFixed(2)}€</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">Frisch zubereitet</span>
+                    </div>
+                  </div>
                   <div className="flex gap-2">
                     {selectedItem.dietary?.map(tag => (
                       <div key={tag} className="bg-primary/10 p-2 rounded-xl border border-primary/20">
@@ -1640,14 +1840,23 @@ export default function App() {
                   className="w-full bg-white/10 border border-white/20 rounded-xl p-4 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 h-24 resize-none"
                 />
                 <button 
-                  onClick={() => {
-                    const newFeedback = {
-                      id: Math.random().toString(36).substr(2, 5),
-                      rating: feedback?.rating || "😍",
-                      comment: feedback?.comment || "Super!",
-                      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    };
-                    setLiveFeedback(prev => [newFeedback, ...prev]);
+                  onClick={async () => {
+                    const rating = feedback?.rating || "😍";
+                    const comment = feedback?.comment || "Super!";
+                    
+                    // Supabase Insert
+                    const { error } = await supabase
+                      .from('feedback')
+                      .insert([{
+                        rating,
+                        comment,
+                        table_number: tableNumber || '?'
+                      }]);
+
+                    if (error) {
+                      console.error('Error saving feedback to Supabase:', error);
+                    }
+
                     setFeedbackSubmitted(true);
                   }}
                   className="w-full bg-white text-primary py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-transform"

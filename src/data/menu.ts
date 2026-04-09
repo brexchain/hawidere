@@ -1,215 +1,989 @@
 import { MenuItem } from '../types';
 
 export const MENU_ITEMS: MenuItem[] = [
-  // DURSCHT (Drinks)
   {
     id: 1,
-    name: "Gedeck 'A'",
+    name: "Gedeck A",
     price: 5.9,
-    cat: 'Durscht',
-    subCat: 'Aperitivo',
+    cat: "Durscht",
+    subCat: "Aperitivo",
     info: "1/3 Pt. Domrep Pils & 2cl. Averna Sour",
-    image: "https://picsum.photos/seed/drink1/400/400",
-    waiterComment: "A klassischer Start, waun ma scho am Vormittag an Durscht hod.",
-    translations: {
-      en: {
-        name: "Combo 'A'",
-        info: "1/3 Pt. Pils & 2cl. Averna Sour",
-        subCat: "Aperitivo",
-        waiterComment: "A classic start, even if you're thirsty in the morning."
-      }
-    }
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/gedeck/400/400",
+    waiterComment: "A klassischer Start in den Tag.",
+    translations: { en: { name: "Combo A", info: "1/3 Pt. Pils & 2cl. Averna Sour", subCat: "Aperitivo" } }
   },
   {
     id: 2,
-    name: "Sissi Sprizz",
-    price: 6.9,
-    cat: 'Durscht',
-    subCat: 'Aperitivo',
-    info: "Frizzante, Holunder, Soda, Limette",
-    image: "https://picsum.photos/seed/drink2/400/400",
-    waiterComment: "Kaiserlich! Do wiad sogoa de Sissi wieda munter.",
-    translations: {
-      en: {
-        name: "Sissi Spritz",
-        info: "Sparkling wine, elderflower, soda, lime",
-        subCat: "Aperitivo",
-        waiterComment: "Imperial! This would even wake up Empress Sissi."
-      }
-    }
+    name: "Bellini",
+    price: 5.1,
+    cat: "Durscht",
+    subCat: "Aperitivo",
+    info: "1/8 Draught Frizzante - white peach purée - hint of soda water",
+    allergens: ["O"],
+    image: "https://picsum.photos/seed/bellini/400/400",
+    translations: { en: { name: "Bellini", info: "Sparkling wine with peach purée", subCat: "Aperitivo" } }
   },
   {
     id: 3,
-    name: "Campari Soda",
-    price: 4.6,
-    cat: 'Durscht',
-    subCat: 'Aperitivo',
-    info: "Bitter-Siaß und rot wie de Liebe.",
-    image: "https://picsum.photos/seed/drink3/400/400",
-    waiterComment: "Fia de, de wissen wos guad is.",
-    translations: {
-      en: {
-        name: "Campari Soda",
-        info: "Bittersweet and red like love.",
-        subCat: "Aperitivo",
-        waiterComment: "For those who know what's good."
-      }
-    }
+    name: "Sissi Sprizz",
+    price: 6.9,
+    cat: "Durscht",
+    subCat: "Aperitivo",
+    info: "1/4 Draught Frizzante - elderflower syrup - sparkling water - lime",
+    allergens: ["O"],
+    isFeatured: true,
+    image: "https://picsum.photos/seed/sissi/400/400",
+    waiterComment: "Kaiserlich erfrischend!",
+    translations: { en: { name: "Sissi Sprizz", info: "Elderflower spritz with lime", subCat: "Aperitivo" } }
   },
   {
     id: 4,
-    name: "Domrep Pils",
-    price: 4.8,
-    cat: 'Durscht',
-    subCat: 'Bier',
-    info: "Frisch zapft, mit ana scheen Schaumkron.",
-    image: "https://picsum.photos/seed/beer/400/400",
-    waiterComment: "A kühles Blondes fia an kühlen Kopf.",
-    translations: {
-      en: {
-        name: "Domrep Pils",
-        info: "Freshly tapped with a nice foam head.",
-        subCat: "Beer",
-        waiterComment: "A cold one to keep a cool head."
-      }
-    }
+    name: "Trutscherl",
+    price: 6.9,
+    cat: "Durscht",
+    subCat: "Aperitivo",
+    info: "1/4 Draught Frizzante - pink grapefruit syrup - sparkling water - orange",
+    allergens: ["O"],
+    image: "https://picsum.photos/seed/trutscherl/400/400",
+    translations: { en: { name: "Trutscherl", info: "Grapefruit spritz with orange", subCat: "Aperitivo" } }
   },
   {
     id: 5,
-    name: "Gemischter Satz",
-    price: 5.2,
-    cat: 'Durscht',
-    subCat: 'Wei',
-    info: "Direkt aus de Wiener Weinberg.",
-    image: "https://picsum.photos/seed/wine/400/400",
-    waiterComment: "Des is Wien im Glasl, Herrschaften!",
-    translations: {
-      en: {
-        name: "Gemischter Satz",
-        info: "Directly from the Viennese vineyards.",
-        subCat: "Wine",
-        waiterComment: "This is Vienna in a glass, ladies and gentlemen!"
-      }
-    }
+    name: "Campari Soda",
+    price: 4.6,
+    cat: "Durscht",
+    subCat: "Aperitivo",
+    info: "Der italienische Klassiker.",
+    image: "https://picsum.photos/seed/campari/400/400",
+    translations: { en: { name: "Campari Soda", info: "The Italian classic.", subCat: "Aperitivo" } }
   },
-
-  // ESSN (Food)
+  {
+    id: 6,
+    name: "Amalfi Sprizz",
+    price: 7.2,
+    cat: "Durscht",
+    subCat: "Aperitivo",
+    info: "Alkoholfrei, 1/4 Aperol Sprizz Style mit Undone Aperitivo",
+    allergens: ["O"],
+    image: "https://picsum.photos/seed/amalfi/400/400",
+    translations: { en: { name: "Amalfi Sprizz", info: "Alcohol-free Aperol style spritz", subCat: "Aperitivo" } }
+  },
+  {
+    id: 7,
+    name: "Hummus",
+    price: 6.4,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Hausgemacht, gekühlt serviert mit Oliven, Olivenöl & 1 Brot",
+    allergens: ["N", "A"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/hummus/400/400",
+    translations: { en: { name: "Hummus", info: "Homemade, served with olives and bread", subCat: "Starters & Soups" } }
+  },
+  {
+    id: 8,
+    name: "Hummus Trio",
+    price: 7.9,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Hummus, Chili- und Mango-Curry-Sauce, mit Oliven & 1 Brot. Sehr scharf.",
+    allergens: ["F", "M", "N", "O", "A"],
+    dietary: ["vegan", "spicy"],
+    image: "https://picsum.photos/seed/hummustrio/400/400",
+    translations: { en: { name: "Hummus Trio", info: "Three types of hummus, very spicy", subCat: "Starters & Soups" } }
+  },
+  {
+    id: 9,
+    name: "Feuersalamander",
+    price: 4.3,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Eingelegte Gurken gefüllt mit Chipotle-Mayo, 2 Stk. Sehr scharf.",
+    allergens: ["C", "M"],
+    dietary: ["veggie", "spicy"],
+    image: "https://picsum.photos/seed/salamander/400/400",
+    translations: { en: { name: "Fire Salamander", info: "Pickled gherkins with chipotle mayo", subCat: "Starters & Soups" } }
+  },
   {
     id: 10,
-    name: "Hummus (Kichererbsen-Gatsch)",
-    price: 6.4,
-    cat: 'Essn',
-    subCat: 'Vorspeis',
-    info: "Hausgmocht, mit Olivenöl und an Brot.",
-    image: "https://picsum.photos/seed/food1/400/400",
-    waiterComment: "Vegan? Na guat, waun's sein muass. Schmeckt owa trotzdem!",
-    dietary: ['vegan'],
-    translations: {
-      en: {
-        name: "Hummus (Chickpea Mash)",
-        info: "Homemade, with olive oil and bread.",
-        subCat: "Starter",
-        waiterComment: "Vegan? Well, if it must be. Tastes great anyway!"
-      }
-    }
+    name: "Azteken Jause",
+    price: 7.9,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Guacamole mit Limetten-Mayo, Granatapfelkernen & 1 Brot",
+    allergens: ["M", "A"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/azteken/400/400",
+    translations: { en: { name: "Aztec Snack", info: "Guacamole with lime mayo and pomegranate", subCat: "Starters & Soups" } }
   },
   {
     id: 11,
-    name: "Kaspress Fries",
-    price: 7.1,
-    cat: 'Essn',
-    subCat: 'Vorspeis',
-    info: "Bergkas, Erdäpfel, Brotsticks mit Sauce Trara.",
-    image: "https://picsum.photos/seed/food2/400/400",
-    waiterComment: "A Wahnsinn, do legst di nieda!",
-    dietary: ['veggie'],
-    allergens: ['A', 'G', 'L'],
-    chefNote: "De Erdäpfel san aus'm Marchfeld, frisch ausgrom.",
-    pairings: [302], // Suggest another drink
-    translations: {
-      en: {
-        name: "Cheese Press Fries",
-        info: "Mountain cheese, potatoes, breadsticks with Tartar sauce.",
-        subCat: "Starter",
-        waiterComment: "Incredible, it'll knock your socks off!"
-      }
-    }
+    name: "Steirer Jause",
+    price: 6.9,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Erbsen-Guacamole, Wachtelei, Kürbiskerne & 1 Brot",
+    allergens: ["C", "A"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/steirer/400/400",
+    translations: { en: { name: "Styrian Snack", info: "Pea guacamole with quail egg", subCat: "Starters & Soups" } }
   },
   {
     id: 12,
-    name: "Hawidere Burger",
-    price: 19.4,
-    cat: 'Essn',
-    subCat: 'Burger',
-    info: "Rindfleisch (200g), Speck, Bergkas, Zwiebel, Chili-Senf-Sauce.",
-    image: "https://picsum.photos/seed/burger1/400/400",
-    waiterComment: "Des is ka Burger, des is a Monument!",
-    dietary: ['spicy'],
-    allergens: ['A', 'C', 'G', 'M'],
-    chefNote: "Unser Rindfleisch kummt direkt vom Fleischer Mayer aus'n 16. Hieb.",
-    pairings: [301], // Suggest a beer
-    translations: {
-      en: {
-        name: "Hawidere Burger",
-        info: "Beef (200g), bacon, mountain cheese, onion, chili-mustard sauce.",
-        subCat: "Burger",
-        waiterComment: "This isn't just a burger, it's a monument!"
-      }
-    }
+    name: "Kaspress Fries",
+    price: 7.1,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Hausgemachte Bergkäse-Erdäpfel-Brotsticks mit Sauce Trara",
+    allergens: ["A", "C", "G", "M"],
+    dietary: ["veggie"],
+    isFeatured: true,
+    image: "https://picsum.photos/seed/kaspress/400/400",
+    translations: { en: { name: "Cheese Fries", info: "Mountain cheese and potato sticks", subCat: "Starters & Soups" } }
   },
   {
     id: 13,
-    name: "Pastrami Sandwich",
-    price: 14.9,
-    cat: 'Essn',
-    subCat: 'Sandwich',
-    info: "Pastrami, Coleslaw, Essiggurkerl, siaßer Senf.",
-    image: "https://picsum.photos/seed/sandwich/400/400",
-    waiterComment: "A gscheite Jausn fia gscheite Leit.",
-    translations: {
-      en: {
-        name: "Pastrami Sandwich",
-        info: "Pastrami, coleslaw, pickles, sweet mustard.",
-        subCat: "Sandwich",
-        waiterComment: "A proper snack for proper people."
-      }
-    }
+    name: "Brokkoli Cheddar Suppe",
+    price: 5.9,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Cremig und würzig.",
+    allergens: ["G", "L"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/brokkoli/400/400",
+    translations: { en: { name: "Broccoli Cheddar Soup", info: "Creamy and savory.", subCat: "Starters & Soups" } }
   },
   {
     id: 14,
-    name: "Fiaker Burger",
-    price: 19.9,
-    cat: 'Essn',
-    subCat: 'Burger',
-    info: "Pulled Beef Gulasch, Spiegelei, Frankfurter, Essiggurkerl.",
-    image: "https://picsum.photos/seed/burger2/400/400",
-    waiterComment: "Wia a Gulasch, nua bessa zum In-de-Händ-hoidn.",
-    translations: {
-      en: {
-        name: "Fiaker Burger",
-        info: "Pulled beef goulash, fried egg, sausage, pickles.",
-        subCat: "Burger",
-        waiterComment: "Like a goulash, but easier to hold in your hands."
-      }
-    }
+    name: "Süßkartoffelsuppe",
+    price: 5.9,
+    cat: "Essn",
+    subCat: "Vorspeisen & Suppen",
+    info: "Mit Kokosmilch & Erbsen",
+    allergens: ["L"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/sweetpotato/400/400",
+    translations: { en: { name: "Sweet Potato Soup", info: "With coconut milk and peas", subCat: "Starters & Soups" } }
   },
   {
     id: 15,
-    name: "Süßkartoffelsuppn",
+    name: "Pastrami Sandwich",
+    price: 14.9,
+    cat: "Essn",
+    subCat: "Kalte Küche - Sandwiches",
+    info: "Pastrami, Coleslaw, Salat, rote Zwiebeln, Gurkerl und süßer Senf im Fladenbrot.",
+    allergens: ["A", "C", "G", "M"],
+    image: "https://picsum.photos/seed/pastrami/400/400",
+    translations: { en: { name: "Pastrami Sandwich", info: "Pastrami with coleslaw and sweet mustard", subCat: "Cold Kitchen" } }
+  },
+  {
+    id: 16,
+    name: "Bread Pitt",
+    price: 11.9,
+    cat: "Essn",
+    subCat: "Kalte Küche - Sandwiches",
+    info: "Guacamole, Hummus, Granatapfelkerne, Rucola, rote Zwiebeln im Fladenbrot.",
+    allergens: ["A", "N"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/breadpitt/400/400",
+    translations: { en: { name: "Bread Pitt", info: "Guacamole and hummus sandwich", subCat: "Cold Kitchen" } }
+  },
+  {
+    id: 17,
+    name: "Insalata Pastrami",
+    price: 11.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Pastrami, Blattsalat, süßer Senf, Tomaten, rote Zwiebeln.",
+    allergens: ["M"],
+    image: "https://picsum.photos/seed/salat1/400/400",
+    translations: { en: { name: "Pastrami Salad", info: "Salad with pastrami and sweet mustard", subCat: "Salads" } }
+  },
+  {
+    id: 18,
+    name: "Caulifornia Salad",
+    price: 14.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Knusprige Blumenkohl-Wings, Guacamole, Salat, Mango-Limetten-Curry-Sauce. Scharf.",
+    allergens: ["A", "F"],
+    dietary: ["vegan", "spicy"],
+    image: "https://picsum.photos/seed/cauliflower/400/400",
+    translations: { en: { name: "Caulifornia Salad", info: "Spicy cauliflower wings on salad", subCat: "Salads" } }
+  },
+  {
+    id: 19,
+    name: "Emperor Salad",
+    price: 11.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Rindfleisch-Patty (200g), Speck, Salat, Tomaten, Cocktail-Sauce.",
+    allergens: ["A", "C", "L", "M"],
+    image: "https://picsum.photos/seed/emperor/400/400",
+    translations: { en: { name: "Emperor Salad", info: "Beef patty and bacon on salad", subCat: "Salads" } }
+  },
+  {
+    id: 20,
+    name: "Protein King Salad",
+    price: 14.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Rindfleisch-Patty (200g), Spiegelei, Wachtelei, Salat, Tomaten.",
+    allergens: ["A", "C", "L"],
+    image: "https://picsum.photos/seed/protein/400/400",
+    translations: { en: { name: "Protein King Salad", info: "Beef patty and eggs on salad", subCat: "Salads" } }
+  },
+  {
+    id: 21,
+    name: "Queens Salad",
+    price: 11.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Gebackener Rosenkohl, Sauce Trara, Blattsalat, Tomaten.",
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/queens/400/400",
+    translations: { en: { name: "Queens Salad", info: "Fried brussels sprouts on salad", subCat: "Salads" } }
+  },
+  {
+    id: 22,
+    name: "Vellness Salad",
+    price: 11.9,
+    cat: "Essn",
+    subCat: "Salate",
+    info: "Vegane Chicken-Style Patties in scharfer Cornflakes-Panier, Salat, Tomaten.",
+    allergens: ["A"],
+    dietary: ["vegan", "spicy"],
+    image: "https://picsum.photos/seed/vellness/400/400",
+    translations: { en: { name: "Vellness Salad", info: "Vegan spicy chicken style salad", subCat: "Salads" } }
+  },
+  {
+    id: 23,
+    name: "Hawidere Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), doppelter Speck, Bergkäse, Röstzwiebeln, Chili-Senf-Sauce.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    isFeatured: true,
+    image: "https://picsum.photos/seed/hawidere/400/400",
+    waiterComment: "Unser ganzer Stolz!",
+    translations: { en: { name: "Hawidere Burger", info: "Beef, double bacon, mountain cheese", subCat: "Burgers" } }
+  },
+  {
+    id: 24,
+    name: "Pure Burger",
+    price: 14.9,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), doppelter Speck, Tomaten, rote Zwiebeln.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/pure/400/400",
+    translations: { en: { name: "Pure Burger", info: "Beef and double bacon", subCat: "Burgers" } }
+  },
+  {
+    id: 25,
+    name: "Nevada Burger",
+    price: 15.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), doppelter Speck, Cocktail-, Knoblauch- & BBQ-Sauce.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/nevada/400/400",
+    translations: { en: { name: "Nevada Burger", info: "Beef, bacon and three sauces", subCat: "Burgers" } }
+  },
+  {
+    id: 26,
+    name: "Cheese Burger",
+    price: 16.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), doppelter Cheddar, doppelter Speck, drei Saucen.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/cheese/400/400",
+    translations: { en: { name: "Cheese Burger", info: "Beef, double cheddar, double bacon", subCat: "Burgers" } }
+  },
+  {
+    id: 27,
+    name: "Eggstasy Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Spiegelei, Wachtelei, Trüffel-Mayo, Speck.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/eggstasy/400/400",
+    translations: { en: { name: "Eggstasy Burger", info: "Beef with two types of eggs and truffle mayo", subCat: "Burgers" } }
+  },
+  {
+    id: 28,
+    name: "Stinky Rose Burger",
+    price: 17.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Mit Knoblauch-Fries. Rindfleisch (200g), Blauschimmelkäse-Sauce, Speck.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/stinky/400/400",
+    translations: { en: { name: "Stinky Rose Burger", info: "Beef with blue cheese and garlic fries", subCat: "Burgers" } }
+  },
+  {
+    id: 29,
+    name: "Avocado Burger",
+    price: 18.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Guacamole, doppelter Speck, drei Saucen.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/avocado/400/400",
+    translations: { en: { name: "Avocado Burger", info: "Beef with guacamole and bacon", subCat: "Burgers" } }
+  },
+  {
+    id: 30,
+    name: "Waldviertler Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Bio-Rind aus dem Waldviertel (200g), doppelter Speck, drei Saucen.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/waldviertler/400/400",
+    translations: { en: { name: "Waldviertler Burger", info: "Organic beef from Waldviertel", subCat: "Burgers" } }
+  },
+  {
+    id: 31,
+    name: "Fiaker Burger",
+    price: 19.9,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Gulasch als Burger. Pulled Beef, Spiegelei, Frankfurter, Gurkerl.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/fiaker/400/400",
+    translations: { en: { name: "Fiaker Burger", info: "Goulash style burger with egg and sausage", subCat: "Burgers" } }
+  },
+  {
+    id: 32,
+    name: "Cheesy Cheese Burger",
+    price: 17.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Käsesauce, doppelter Speck, drei Saucen.",
+    allergens: ["A", "C", "E", "F", "G", "L", "M"],
+    image: "https://picsum.photos/seed/cheesy/400/400",
+    translations: { en: { name: "Cheesy Cheese Burger", info: "Beef with extra cheese sauce", subCat: "Burgers" } }
+  },
+  {
+    id: 33,
+    name: "Holy Cow Burger",
+    price: 17.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Mango-Curry-Sauce, doppelter Cheddar, Speck.",
+    allergens: ["A", "C", "E", "F", "G", "H", "L", "M"],
+    image: "https://picsum.photos/seed/holycow/400/400",
+    translations: { en: { name: "Holy Cow Burger", info: "Beef with mango curry sauce", subCat: "Burgers" } }
+  },
+  {
+    id: 34,
+    name: "Uhudler Blue Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Speck, Uhudler-Zwiebeln, Blauschimmelkäse.",
+    allergens: ["A", "C", "E", "G", "L", "M", "O"],
+    image: "https://picsum.photos/seed/uhudler/400/400",
+    translations: { en: { name: "Uhudler Blue Burger", info: "Beef with Uhudler onions and blue cheese", subCat: "Burgers" } }
+  },
+  {
+    id: 35,
+    name: "Cheese & Onion Burger",
+    price: 18.4,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Cheddar, Zwiebelringe, Sauce Trara, Speck.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    image: "https://picsum.photos/seed/onion/400/400",
+    translations: { en: { name: "Cheese & Onion Burger", info: "Beef with cheddar and onion rings", subCat: "Burgers" } }
+  },
+  {
+    id: 36,
+    name: "Texas Farmer Burger",
+    price: 19.9,
+    cat: "Essn",
+    subCat: "Burgers",
+    info: "Rindfleisch (200g), Baked Beans mit Speck, Spiegelei, Cheddar.",
+    allergens: ["A", "C", "E", "G", "L", "M", "O"],
+    image: "https://picsum.photos/seed/texas/400/400",
+    translations: { en: { name: "Texas Farmer Burger", info: "Beef with baked beans and egg", subCat: "Burgers" } }
+  },
+  {
+    id: 37,
+    name: "Chipotle Burger",
+    price: 17.4,
+    cat: "Essn",
+    subCat: "Burgers - scharf",
+    info: "Rindfleisch (200g), Chipotle-Mayo, doppelter Cheddar, Speck. Scharf.",
+    allergens: ["A", "C", "E", "F", "G", "L", "M"],
+    dietary: ["spicy"],
+    image: "https://picsum.photos/seed/chipotle/400/400",
+    translations: { en: { name: "Chipotle Burger", info: "Beef with spicy chipotle mayo", subCat: "Spicy Burgers" } }
+  },
+  {
+    id: 38,
+    name: "Jalapeño Burger",
+    price: 18.4,
+    cat: "Essn",
+    subCat: "Burgers - scharf",
+    info: "Rindfleisch (200g), Käsesauce, Jalapeños, doppelter Speck. Scharf.",
+    allergens: ["A", "C", "E", "F", "G", "L", "M"],
+    dietary: ["spicy"],
+    image: "https://picsum.photos/seed/jalapeno/400/400",
+    translations: { en: { name: "Jalapeño Burger", info: "Beef with cheese sauce and jalapeños", subCat: "Spicy Burgers" } }
+  },
+  {
+    id: 39,
+    name: "Chili Burger",
+    price: 17.4,
+    cat: "Essn",
+    subCat: "Burgers - scharf",
+    info: "Rindfleisch (200g), Chili-Sauce, doppelter Cheddar, Speck. Scharf.",
+    allergens: ["A", "C", "E", "G", "L", "M", "O"],
+    dietary: ["spicy"],
+    image: "https://picsum.photos/seed/chili/400/400",
+    translations: { en: { name: "Chili Burger", info: "Beef with hot chili sauce", subCat: "Spicy Burgers" } }
+  },
+  {
+    id: 40,
+    name: "Fünfhaus Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes Bohnen-Patty, veganer Cheddar, Röstzwiebeln, Chili-Senf-Sauce.",
+    allergens: ["A", "E", "L", "M"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/funfhaus/400/400",
+    translations: { en: { name: "Fünfhaus Burger", info: "Vegan bean burger with chili mustard", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 41,
+    name: "Brussels Sprouts Burger",
+    price: 15.4,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Gebackener Rosenkohl, doppelter Cheddar, drei Saucen.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/brussels/400/400",
+    translations: { en: { name: "Brussels Sprouts Burger", info: "Fried brussels sprouts burger", subCat: "Veggie Burgers" } }
+  },
+  {
+    id: 42,
+    name: "Veggie Burger",
+    price: 15.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Doppeltes Gemüse-Patty, doppelter Cheddar, drei Saucen.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/veggie/400/400",
+    translations: { en: { name: "Veggie Burger", info: "Double vegetable patty burger", subCat: "Veggie Burgers" } }
+  },
+  {
+    id: 43,
+    name: "Tartufo Burger",
+    price: 17.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Doppeltes Gemüse-Patty, Trüffel-Mayo, doppelter Cheddar.",
+    allergens: ["A", "C", "E", "G", "L", "M"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/tartufo/400/400",
+    translations: { en: { name: "Tartufo Burger", info: "Veggie burger with truffle mayo", subCat: "Veggie Burgers" } }
+  },
+  {
+    id: 44,
+    name: "Falafel Burger",
+    price: 16.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes Falafel-Patty, Hummus, BBQ-Sauce.",
+    allergens: ["A", "E", "L", "M", "N"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/falafel/400/400",
+    translations: { en: { name: "Falafel Burger", info: "Homemade falafel burger with hummus", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 45,
+    name: "Mumbai Burger",
+    price: 16.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes Falafel-Patty, Mango-Curry-Sauce, BBQ-Sauce.",
+    allergens: ["A", "F", "H", "M"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/mumbai/400/400",
+    translations: { en: { name: "Mumbai Burger", info: "Falafel burger with mango curry sauce", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 46,
+    name: "Black Bean Burger",
+    price: 16.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes geräuchertes Bohnen-Patty, BBQ-Sauce.",
+    allergens: ["A", "E", "L", "M"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/blackbean/400/400",
+    translations: { en: { name: "Black Bean Burger", info: "Smoked bean burger", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 47,
+    name: "Acapulco Burger",
+    price: 19.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes Bohnen-Patty, Guacamole, BBQ-Sauce.",
+    allergens: ["A", "E", "L", "M"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/acapulco/400/400",
+    translations: { en: { name: "Acapulco Burger", info: "Bean burger with guacamole", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 48,
+    name: "Hickory Onion Burger",
+    price: 19.4,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch",
+    info: "Hausgemachtes Bohnen-Patty, Zwiebelringe, Sauce Trara, BBQ-Sauce.",
+    allergens: ["A", "E", "F", "H", "L", "M"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/hickory/400/400",
+    translations: { en: { name: "Hickory Onion Burger", info: "Bean burger with onion rings", subCat: "Vegan Burgers" } }
+  },
+  {
+    id: 49,
+    name: "Chix on the Run Burger",
+    price: 18.4,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch & scharf",
+    info: "Vegane Chicken-Style Patties in scharfer Cornflakes-Panier, Sauce Trara. Scharf.",
+    allergens: ["A", "M"],
+    dietary: ["vegan", "spicy"],
+    image: "https://picsum.photos/seed/chix/400/400",
+    translations: { en: { name: "Chix on the Run", info: "Vegan spicy chicken style burger", subCat: "Vegan Spicy" } }
+  },
+  {
+    id: 50,
+    name: "Spicy Limes Burger",
+    price: 18.9,
+    cat: "Essn",
+    subCat: "Burgers - vegan & vegetarisch & scharf",
+    info: "Vegane Chicken-Style Patties, Limetten-Mayo, Chili-Sauce. Scharf.",
+    allergens: ["A", "M"],
+    dietary: ["vegan", "spicy"],
+    image: "https://picsum.photos/seed/limes/400/400",
+    translations: { en: { name: "Spicy Limes Burger", info: "Vegan chicken style with lime and chili", subCat: "Vegan Spicy" } }
+  },
+  {
+    id: 51,
+    name: "Gemischter Blattsalat",
+    price: 4.7,
+    cat: "Essn",
+    subCat: "Pimp your Burger",
+    info: "Mit Wiener Marinade.",
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/side1/400/400",
+    translations: { en: { name: "Mixed Leaf Salad", info: "With Viennese dressing", subCat: "Sides" } }
+  },
+  {
+    id: 52,
+    name: "Coleslaw",
+    price: 4.7,
+    cat: "Essn",
+    subCat: "Pimp your Burger",
+    info: "Klassischer Krautsalat nach amerikanischer Art.",
+    allergens: ["C", "G", "M"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/coleslaw/400/400",
+    translations: { en: { name: "Coleslaw", info: "Classic American style cabbage salad", subCat: "Sides" } }
+  },
+  {
+    id: 53,
+    name: "BIO Spiegelei",
+    price: 2.9,
+    cat: "Essn",
+    subCat: "Pimp your Burger",
+    info: "Frisch zubereitet.",
+    image: "https://picsum.photos/seed/egg/400/400",
+    translations: { en: { name: "Organic Fried Egg", info: "Freshly prepared", subCat: "Sides" } }
+  },
+  {
+    id: 54,
+    name: "Truffle Fries",
+    price: 6.8,
+    cat: "Essn",
+    subCat: "Steakhouse Fries",
+    info: "Steakhouse Fries mit Trüffel-Mayo Topping.",
+    allergens: ["C", "M"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/trufflefries/400/400",
+    translations: { en: { name: "Truffle Fries", info: "Fries with truffle mayo", subCat: "Special Fries" } }
+  },
+  {
+    id: 55,
+    name: "Garlic Fries",
+    price: 6.3,
+    cat: "Essn",
+    subCat: "Steakhouse Fries",
+    info: "Steakhouse Fries mit Knoblauch-Petersil-Öl.",
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/garlicfries/400/400",
+    translations: { en: { name: "Garlic Fries", info: "Fries with garlic and parsley oil", subCat: "Special Fries" } }
+  },
+  {
+    id: 56,
+    name: "Chipotle Fries",
+    price: 6.8,
+    cat: "Essn",
+    subCat: "Steakhouse Fries",
+    info: "Steakhouse Fries mit Chipotle-Mayo. Sehr scharf.",
+    allergens: ["C", "M"],
+    dietary: ["veggie", "spicy"],
+    image: "https://picsum.photos/seed/chipotlefries/400/400",
+    translations: { en: { name: "Chipotle Fries", info: "Fries with spicy chipotle mayo", subCat: "Special Fries" } }
+  },
+  {
+    id: 57,
+    name: "Cheesy Fries",
+    price: 6.8,
+    cat: "Essn",
+    subCat: "Steakhouse Fries",
+    info: "Steakhouse Fries mit Käsesauce.",
+    allergens: ["F", "G"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/cheesyfries/400/400",
+    translations: { en: { name: "Cheesy Fries", info: "Fries with cheese sauce", subCat: "Special Fries" } }
+  },
+  {
+    id: 58,
+    name: "Rudolfscrime Fries",
+    price: 7.4,
+    cat: "Essn",
+    subCat: "Steakhouse Fries",
+    info: "Steakhouse Fries mit Jalapeños und Käsesauce. Sehr scharf.",
+    allergens: ["F", "G"],
+    dietary: ["veggie", "spicy"],
+    image: "https://picsum.photos/seed/rudolf/400/400",
+    translations: { en: { name: "Rudolfscrime Fries", info: "Fries with jalapeños and cheese sauce", subCat: "Special Fries" } }
+  },
+  {
+    id: 59,
+    name: "New York Style Cheesecake",
     price: 5.9,
-    cat: 'Essn',
-    subCat: 'Suppn',
-    info: "Mit Kokosmilch und Erbsen. Vegan.",
-    image: "https://picsum.photos/seed/soup/400/400",
-    waiterComment: "Wos fia de Linie, damit de Hosn nu passt.",
-    dietary: ['vegan', 'glutenfree'],
-    translations: {
-      en: {
-        name: "Sweet Potato Soup",
-        info: "With coconut milk and peas. Vegan.",
-        subCat: "Soup",
-        waiterComment: "Good for the waistline, so your pants still fit."
-      }
-    }
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Hausgemacht.",
+    allergens: ["A", "C", "G"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/cheesecake/400/400",
+    translations: { en: { name: "NY Cheesecake", info: "Homemade cheesecake", subCat: "Desserts" } }
+  },
+  {
+    id: 60,
+    name: "Sacher Cheesecake",
+    price: 7.9,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Hausgemacht mit Marillenmarmelade und Schokosauce.",
+    allergens: ["A", "C", "G"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/sacher/400/400",
+    translations: { en: { name: "Sacher Cheesecake", info: "Cheesecake with apricot jam and chocolate", subCat: "Desserts" } }
+  },
+  {
+    id: 61,
+    name: "Apfelstrudel Cheesecake",
+    price: 8.4,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Hausgemacht mit Apfel-Zimt-Kompott und Strudel-Crunch.",
+    allergens: ["A", "C", "G"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/applecheesecake/400/400",
+    translations: { en: { name: "Apple Strudel Cheesecake", info: "Cheesecake with apple cinnamon", subCat: "Desserts" } }
+  },
+  {
+    id: 62,
+    name: "Schokoauflauf",
+    price: 6.9,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Warmes Schokosoufflé mit Orange, Schokosauce & Schlagobers.",
+    allergens: ["A", "C", "F", "G", "L", "M", "N"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/souffle/400/400",
+    translations: { en: { name: "Chocolate Soufflé", info: "Warm chocolate cake with orange and cream", subCat: "Desserts" } }
+  },
+  {
+    id: 63,
+    name: "Peanut Butter Blondie",
+    price: 6.4,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Warmer Erdnussbutterkuchen mit Schlagobers. Glutenfrei.",
+    allergens: ["E", "H"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/blondie/400/400",
+    translations: { en: { name: "Peanut Butter Blondie", info: "Warm peanut butter cake, gluten-free", subCat: "Desserts" } }
+  },
+  {
+    id: 64,
+    name: "Cake & Ice",
+    price: 8.4,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Blondie mit Vanilleeis, Schokosauce, Lotus-Crunch & Schlagobers.",
+    allergens: ["E", "H"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/cakeice/400/400",
+    translations: { en: { name: "Cake & Ice", info: "Blondie with vanilla ice cream and chocolate", subCat: "Desserts" } }
+  },
+  {
+    id: 65,
+    name: "Pistachio Swirl",
+    price: 6.4,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Hausgemachtes Milch-Pistazien-Eis mit Schokostückchen.",
+    allergens: ["C", "F", "G", "H"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/pistachio/400/400",
+    translations: { en: { name: "Pistachio Swirl", info: "Homemade pistachio ice cream", subCat: "Desserts" } }
+  },
+  {
+    id: 66,
+    name: "Tichy Eismarillenknödel",
+    price: 5.9,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Das Original aus Favoriten, ein Stück mit Schlagobers.",
+    allergens: ["C", "E", "G", "H"],
+    dietary: ["veggie"],
+    image: "https://picsum.photos/seed/tichy/400/400",
+    translations: { en: { name: "Tichy Apricot Dumpling", info: "Original ice cream apricot dumpling", subCat: "Desserts" } }
+  },
+  {
+    id: 67,
+    name: "Affogato",
+    price: 4.9,
+    cat: "Essn",
+    subCat: "Nachspeisen",
+    info: "Kleiner Espresso mit Vanilleeis.",
+    allergens: ["F"],
+    dietary: ["vegan"],
+    image: "https://picsum.photos/seed/affogato/400/400",
+    translations: { en: { name: "Affogato", info: "Espresso with vanilla ice cream", subCat: "Desserts" } }
+  },
+  {
+    id: 68,
+    name: "Domrep Pils",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 1 - Pils, untergärig, erfrischend und herb.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/beer1/400/400",
+    translations: { en: { name: "Domrep Pils", info: "Refreshing lager on tap", subCat: "Draught Beer" } }
+  },
+  {
+    id: 69,
+    name: "Domrep IPA",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 2 - India Pale Ale, hopfenbetont.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/ipa/400/400",
+    translations: { en: { name: "Domrep IPA", info: "Hoppy IPA on tap", subCat: "Draught Beer" } }
+  },
+  {
+    id: 70,
+    name: "Schremser Naturtrüb",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 3 - Naturtrüb, angenehm malzig.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/schremser/400/400",
+    translations: { en: { name: "Schremser Unfiltered", info: "Unfiltered malty lager", subCat: "Draught Beer" } }
+  },
+  {
+    id: 71,
+    name: "Schremser Premium",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 4 - Premium Lager, erfrischend.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/premium/400/400",
+    translations: { en: { name: "Schremser Premium", info: "Refreshing premium lager", subCat: "Draught Beer" } }
+  },
+  {
+    id: 72,
+    name: "Winnie the Brew",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 5 - Craft Beer.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/winnie/400/400",
+    translations: { en: { name: "Winnie the Brew", info: "Seasonal craft beer", subCat: "Draught Beer" } }
+  },
+  {
+    id: 73,
+    name: "Green is Lord",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 6 - Pale Ale.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/green/400/400",
+    translations: { en: { name: "Green is Lord", info: "Pale ale on tap", subCat: "Draught Beer" } }
+  },
+  {
+    id: 74,
+    name: "Erdinger Urweisse",
+    price: 5.9,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 7 - Weizenbier, fruchtiger Duft.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/erdinger/400/400",
+    translations: { en: { name: "Erdinger Wheat Beer", info: "Traditional wheat beer", subCat: "Draught Beer" } }
+  },
+  {
+    id: 75,
+    name: "White Rabbit",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 8 - Belgian Style, fruchtig.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/rabbit/400/400",
+    translations: { en: { name: "White Rabbit", info: "Fruity Belgian style beer", subCat: "Draught Beer" } }
+  },
+  {
+    id: 76,
+    name: "Guinness",
+    price: 5.9,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 9 - Stout, Kaffeearomen.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/guinness/400/400",
+    translations: { en: { name: "Guinness", info: "Classic Irish stout", subCat: "Draught Beer" } }
+  },
+  {
+    id: 77,
+    name: "First Wave",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 10 - IPA, hopfenbetont.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/wave/400/400",
+    translations: { en: { name: "First Wave IPA", info: "Hoppy IPA on tap", subCat: "Draught Beer" } }
+  },
+  {
+    id: 78,
+    name: "Fuchsteufelswuid",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 11 - Craft Beer.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/fox/400/400",
+    translations: { en: { name: "Fuchsteufelswuid", info: "Wild craft beer", subCat: "Draught Beer" } }
+  },
+  {
+    id: 79,
+    name: "Budweiser Original",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 12 - Lager.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/bud/400/400",
+    translations: { en: { name: "Budweiser", info: "Original Czech lager", subCat: "Draught Beer" } }
+  },
+  {
+    id: 80,
+    name: "Mundaka Zero",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 13 - Alkoholfrei.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/zero/400/400",
+    translations: { en: { name: "Mundaka Zero", info: "Alcohol-free beer on tap", subCat: "Draught Beer" } }
+  },
+  {
+    id: 81,
+    name: "San Cristóbal",
+    price: 5.5,
+    cat: "Durscht",
+    subCat: "Fassbiere",
+    info: "Tap 14 - Craft Beer.",
+    allergens: ["A"],
+    image: "https://picsum.photos/seed/cristobal/400/400",
+    translations: { en: { name: "San Cristóbal", info: "Specialty craft beer", subCat: "Draught Beer" } }
+  },
+  {
+    id: 82,
+    name: "Frizzante vom Fass",
+    price: 4.6,
+    cat: "Durscht",
+    subCat: "Cider & Sprudel",
+    info: "1/8 - Prosecho ≠ Prosecco.",
+    allergens: ["O"],
+    image: "https://picsum.photos/seed/frizzante/400/400",
+    translations: { en: { name: "Draught Frizzante", info: "Sparkling wine on tap", subCat: "Cider & Bubbles" } }
+  },
+  {
+    id: 83,
+    name: "Uhudler rot",
+    price: 4.2,
+    cat: "Durscht",
+    subCat: "Uhudler",
+    info: "1/8 - Himbeer- und Walderdbeeraroma.",
+    image: "https://picsum.photos/seed/uhudlerred/400/400",
+    translations: { en: { name: "Red Uhudler", info: "Berry-flavored specialty wine", subCat: "Uhudler" } }
+  },
+  {
+    id: 84,
+    name: "Uhudler weiß",
+    price: 4.2,
+    cat: "Durscht",
+    subCat: "Uhudler",
+    info: "1/8 - Intensives Ananasaroma.",
+    image: "https://picsum.photos/seed/uhudlerwhite/400/400",
+    translations: { en: { name: "White Uhudler", info: "Pineapple-flavored specialty wine", subCat: "Uhudler" } }
+  },
+  {
+    id: 85,
+    name: "Classic Margarita",
+    price: 10.9,
+    cat: "Durscht",
+    subCat: "Cocktails",
+    info: "Tequila Silver - Triple Sec - Limettensaft.",
+    image: "https://picsum.photos/seed/margarita/400/400",
+    translations: { en: { name: "Classic Margarita", info: "Tequila, triple sec and lime", subCat: "Cocktails" } }
+  },
+  {
+    id: 86,
+    name: "Cuba Libre",
+    price: 8.9,
+    cat: "Durscht",
+    subCat: "Cocktails",
+    info: "Rum - Cola - Eis - Limette.",
+    image: "https://picsum.photos/seed/cubalibre/400/400",
+    translations: { en: { name: "Cuba Libre", info: "Rum and coke with lime", subCat: "Cocktails" } }
   }
 ];
