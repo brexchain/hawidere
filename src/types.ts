@@ -9,6 +9,19 @@ export interface MenuItem {
   info: string;
   image?: string;
   waiterComment?: string;
+  isSoldOut?: boolean;
+  dietary?: ('vegan' | 'veggie' | 'glutenfree' | 'spicy')[];
+  allergens?: string[];
+  chefNote?: string;
+  pairings?: number[]; // IDs of suggested items
+  translations?: {
+    en: {
+      name: string;
+      info: string;
+      subCat: string;
+      waiterComment?: string;
+    }
+  };
 }
 
 export interface AppConfig {
@@ -16,6 +29,8 @@ export interface AppConfig {
   logo?: string;
   bgImage?: string;
   primaryColor: string;
+  tileLayout?: 'big' | 'small';
+  language?: 'at' | 'en';
   promoText?: string;
   promoBannerUrl?: string;
   discount?: number;
