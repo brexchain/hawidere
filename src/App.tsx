@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Coffee,
   Settings,
-  Image as ImageIcon,
+  ImageIcon,
   Save,
   Trash2,
   Phone,
@@ -28,7 +28,8 @@ import {
   Flame,
   BellRing,
   Fingerprint,
-  Star
+  Star,
+  ChevronLeft
 } from 'lucide-react';
 import { MENU_ITEMS as INITIAL_MENU } from './data/menu';
 import { MenuItem, Category, AppConfig } from './types';
@@ -46,6 +47,7 @@ const DEFAULT_CONFIG: AppConfig = {
 
 export default function App() {
   const [activeCat, setActiveCat] = useState<Category>('Essn');
+  const [activeSubCat, setActiveSubCat] = useState<string | null>(null);
   const [cart, setCart] = useState<{ [key: number]: number }>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -72,6 +74,7 @@ export default function App() {
   const [liveFeedback, setLiveFeedback] = useState<{ id: string; rating: string; comment: string; time: string }[]>([]);
   const [lastOrder, setLastOrder] = useState<{ items: any[]; total: number } | null>(null);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [resetConfirm, setResetConfirm] = useState(false);
   const [isPaymentSheetOpen, setIsPaymentSheetOpen] = useState(false);
   const [paymentSheetType, setPaymentSheetType] = useState<'apple' | 'google' | null>(null);
   const [paymentProcessingStep, setPaymentProcessingStep] = useState<'idle' | 'authenticating' | 'processing'>('idle');
@@ -89,8 +92,16 @@ export default function App() {
     return saved ? JSON.parse(saved) : DEFAULT_CONFIG;
   });
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
-    const saved = localStorage.getItem('hawidere_menu');
-    return saved ? JSON.parse(saved) : INITIAL_MENU;
+    const saved = localStorage.getItem('hawidere_menu_v3');
+    if (saved) return JSON.parse(saved);
+    
+    const oldSaved = localStorage.getItem('hawidere_menu');
+    if (oldSaved) {
+      const parsed = JSON.parse(oldSaved);
+      if (parsed.length >= 80) return parsed;
+    }
+    
+    return INITIAL_MENU;
   });
 
   useEffect(() => {
@@ -99,7 +110,7 @@ export default function App() {
   }, [config]);
 
   useEffect(() => {
-    localStorage.setItem('hawidere_menu', JSON.stringify(menuItems));
+    localStorage.setItem('hawidere_menu_v3', JSON.stringify(menuItems));
   }, [menuItems]);
 
   // Supabase Realtime Subscriptions
@@ -295,13 +306,25 @@ export default function App() {
   const filteredItems = useMemo(() => {
     return menuItems.filter(item => {
       const matchesCat = item.cat === activeCat;
+      const matchesSubCat = !activeSubCat || item.subCat === activeSubCat;
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            item.info.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           item.translations?.en?.name.toLowerCase().includes(searchQuery.toLowerCase());
+                           (item.translations?.en?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
       const matchesDietary = !activeDietary || item.dietary?.includes(activeDietary as any);
-      return matchesCat && matchesSearch && matchesDietary;
+      return matchesCat && matchesSubCat && matchesSearch && matchesDietary;
     });
-  }, [activeCat, menuItems, searchQuery, activeDietary]);
+  }, [activeCat, activeSubCat, menuItems, searchQuery, activeDietary]);
+
+  const subCategories = useMemo(() => {
+    const subs = menuItems
+      .filter(item => item.cat === activeCat)
+      .map(item => item.subCat);
+    return Array.from(new Set(subs));
+  }, [activeCat, menuItems]);
+
+  useEffect(() => {
+    setActiveSubCat(null);
+  }, [activeCat]);
 
   const featuredItems = useMemo(() => {
     return menuItems.filter(i => i.isFeatured).slice(0, 3);
@@ -597,30 +620,102 @@ export default function App() {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex p-4 gap-4 sticky top-[164px] z-20 bg-app/90 backdrop-blur-sm">
+      <div className="flex p-4 gap-4 sticky top-[164px] z-20 bg-app/90 backdrop-blur-sm md:max-w-2xl md:mx-auto">
         <button
           onClick={() => setActiveCat('Essn')}
-          className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-[2rem] font-black uppercase tracking-widest transition-all ${
             activeCat === 'Essn' 
-              ? 'bg-primary text-white shadow-lg scale-105' 
-              : 'bg-card-app text-app border border-app hover:opacity-80'
+              ? 'bg-primary text-white shadow-[0_10px_30px_rgba(var(--primary-rgb),0.4)] scale-105' 
+              : 'bg-card-app text-app border border-app hover:bg-app hover:scale-[1.02]'
           }`}
         >
-          <Utensils size={20} />
-          {t.essn}
+          <Utensils size={24} />
+          <span className="text-sm md:text-base">{t.essn}</span>
         </button>
         <button
           onClick={() => setActiveCat('Durscht')}
-          className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-3 py-5 rounded-[2rem] font-black uppercase tracking-widest transition-all ${
             activeCat === 'Durscht' 
-              ? 'bg-primary text-white shadow-lg scale-105' 
-              : 'bg-card-app text-app border border-app hover:opacity-80'
+              ? 'bg-primary text-white shadow-[0_10px_30px_rgba(var(--primary-rgb),0.4)] scale-105' 
+              : 'bg-card-app text-app border border-app hover:bg-app hover:scale-[1.02]'
           }`}
         >
-          <Beer size={20} />
-          {t.durscht}
+          <Beer size={24} />
+          <span className="text-sm md:text-base">{t.durscht}</span>
         </button>
       </div>
+
+      {/* Sub-Category Slider */}
+      <motion.div 
+        key={activeCat}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="px-4 mb-6 relative group md:max-w-4xl md:mx-auto"
+      >
+        <div className="flex items-center justify-between mb-2 px-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">
+            {activeCat === 'Essn' ? 'Speisen' : 'Getränke'} Kategorien
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 overflow-hidden">
+            {/* Gradient Masks */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-app to-transparent z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-app to-transparent z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            
+            <div 
+              id="subcat-slider"
+              className="flex gap-2 overflow-x-auto no-scrollbar pb-2 scroll-smooth snap-x snap-mandatory scroll-pl-4"
+            >
+              <button
+                onClick={() => setActiveSubCat(null)}
+                className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border snap-start ${
+                  activeSubCat === null 
+                    ? 'bg-primary text-white border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] scale-105' 
+                    : 'bg-card-app text-app border-app opacity-40 hover:opacity-100 hover:bg-app'
+                }`}
+              >
+                {t.all}
+              </button>
+              {subCategories.map((sub) => (
+                <button
+                  key={sub}
+                  onClick={() => setActiveSubCat(sub)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border snap-start ${
+                    activeSubCat === sub 
+                      ? 'bg-primary text-white border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] scale-105' 
+                      : 'bg-card-app text-app border-app opacity-40 hover:opacity-100 hover:bg-app'
+                  }`}
+                >
+                  {sub}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Desktop Navigation Arrows */}
+          <div className="hidden md:flex gap-2">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('subcat-slider');
+                if (el) el.scrollLeft -= 200;
+              }}
+              className="p-2.5 bg-card-app border border-app rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm active:scale-90"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('subcat-slider');
+                if (el) el.scrollLeft += 200;
+              }}
+              className="p-2.5 bg-card-app border border-app rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm active:scale-90"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Menu List */}
       <main className="flex-1 p-4 space-y-4 pb-32">
@@ -676,9 +771,15 @@ export default function App() {
           </section>
         )}
 
+        <div className="flex justify-between items-center mb-2 px-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">
+            {activeCat === 'Essn' ? t.essn : t.durscht} — {filteredItems.length} {filteredItems.length === 1 ? 'Item' : 'Items'}
+          </span>
+        </div>
+
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeCat + (config.tileLayout || 'big')}
+            key={activeCat + activeSubCat + (config.tileLayout || 'big')}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
@@ -1338,25 +1439,46 @@ export default function App() {
                 {/* Menu Management */}
                 <section className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-xs font-bold uppercase tracking-widest opacity-50 flex items-center gap-2">
-                      <Utensils size={14} /> Menu Items
-                    </h3>
-                    <button 
-                      onClick={() => {
-                        const newItem: MenuItem = {
-                          id: Date.now(),
-                          name: "Neiches Trümmerl",
-                          price: 0,
-                          cat: 'Essn',
-                          subCat: 'Neich',
-                          info: 'Wos is des?',
-                        };
-                        setMenuItems([...menuItems, newItem]);
-                      }}
-                      className="text-xs font-bold text-primary hover:underline"
-                    >
-                      + Add Item
-                    </button>
+                    <div className="flex flex-col">
+                      <h3 className="text-xs font-bold uppercase tracking-widest opacity-50 flex items-center gap-2">
+                        <Utensils size={14} /> Menu Items
+                      </h3>
+                      <span className="text-[10px] opacity-40 font-bold mt-1">Total: {menuItems.length} Items</span>
+                    </div>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={() => {
+                          if (resetConfirm) {
+                            setMenuItems(INITIAL_MENU);
+                            setResetConfirm(false);
+                          } else {
+                            setResetConfirm(true);
+                            setTimeout(() => setResetConfirm(false), 3000);
+                          }
+                        }}
+                        className={`text-xs font-bold transition-all ${
+                          resetConfirm ? 'text-white bg-red-500 px-3 py-1 rounded-lg' : 'text-red-400 hover:text-red-600'
+                        }`}
+                      >
+                        {resetConfirm ? 'Click again to confirm reset' : 'Reset to Default'}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          const newItem: MenuItem = {
+                            id: Date.now(),
+                            name: "Neiches Trümmerl",
+                            price: 0,
+                            cat: 'Essn',
+                            subCat: 'Neich',
+                            info: 'Wos is des?',
+                          };
+                          setMenuItems([...menuItems, newItem]);
+                        }}
+                        className="text-xs font-bold text-primary hover:underline"
+                      >
+                        + Add Item
+                      </button>
+                    </div>
                   </div>
                   <div className="space-y-4">
                     {menuItems.map((item, idx) => (
